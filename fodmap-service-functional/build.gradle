@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version 'unspecified'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.projectlombok:lombok:1.18.22'
+
+// This dependency bring in the class Cucumber and CucumberOptions
+    implementation 'io.cucumber:cucumber-java:6.10.4'
+    implementation 'io.cucumber:cucumber-junit:6.10.4'
+    implementation 'io.cucumber:cucumber-guice:6.10.4'
+
+
+// Since we are using cucumber JUnit 5, we will need to use the vintage Junit dependency otherwise we will get error no tests found
+    implementation 'org.junit.vintage:junit-vintage-engine:5.7.2'
+
+// These dependencies bring in the RunWith class and assert methods required in the step definitions
+    implementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    // https://mvnrepository.com/artifact/com.google.inject/guice
+    implementation 'com.google.inject:guice:5.1.0'
+
+    implementation project(':reactive-fodmap-service')
+
+    implementation 'org.cassandraunit:cassandra-unit:4.3.1.0'
+
+    implementation 'com.datastax.cassandra:cassandra-driver-core:3.11.0'
+    implementation 'com.datastax.oss:java-driver-core:4.15.0'
+
+    implementation 'org.springframework.boot:spring-boot-starter-webflux:2.2.13.RELEASE'
+    implementation 'io.projectreactor:reactor-test:3.4.17'
+    implementation 'org.springframework.data:spring-data-cassandra:2.2.13.RELEASE'
+    // https://mvnrepository.com/artifact/org.yaml/snakeyaml
+    implementation 'org.yaml:snakeyaml:1.33'
+
+    testImplementation 'org.apache.httpcomponents:httpclient:4.5.6'
+
+
+}
+
+test {
+    useJUnitPlatform()
+}

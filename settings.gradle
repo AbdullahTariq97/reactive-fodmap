@@ -1,0 +1,5 @@
+rootProject.name = 'reactive-fodmap'
+include 'reactive-fodmap-service'
+include 'fodmap-service-functional'
+include 'dependency-test'
+

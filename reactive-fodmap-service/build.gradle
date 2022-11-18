@@ -1,0 +1,47 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.6.6'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.assertj:assertj-core:3.23.1' // For JUnit5  assertions
+    testImplementation 'org.mockito:mockito-junit-jupiter:4.8.0' // For Mockito.class
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0' // For Running JUnit 5
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0' // For JUnit5  assertions
+
+// https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy
+    implementation 'net.bytebuddy:byte-buddy:1.12.16'
+
+    testImplementation 'org.mockito:mockito-core:4.7.0'
+    testImplementation 'io.projectreactor:reactor-test:3.4.17'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    implementation 'org.springframework.boot:spring-boot-starter-webflux:2.2.13.RELEASE'
+    implementation 'org.springframework.data:spring-data-cassandra:2.2.13.RELEASE'
+
+    implementation "org.springframework.boot:spring-boot-starter-actuator:2.3.0.RELEASE"
+
+
+//   This gives you the cassandra repository class
+    implementation 'com.datastax.cassandra:cassandra-driver-core:3.11.0'
+    implementation 'com.codahale.metrics:metrics-core:3.0.2'
+
+    // https://mvnrepository.com/artifact/org.yaml/snakeyaml
+    implementation 'org.yaml:snakeyaml:1.33'
+
+}
+
+test {
+    useJUnitPlatform()
+}
