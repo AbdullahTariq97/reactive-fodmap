@@ -8,6 +8,8 @@ import lombok.Setter;
 import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
+import java.util.Objects;
+
 @UserDefinedType("stratified_rating")
 @Setter
 @Getter
@@ -43,6 +45,19 @@ public class StratifiedData {
         this.sorbitol = stratifiedDtoBuilder.sorbitol;
         this.gos = stratifiedDtoBuilder.gos;
         this.fructan = stratifiedDtoBuilder.fructan;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StratifiedData that = (StratifiedData) o;
+        return amount == that.amount && Objects.equals(fructose, that.fructose) && Objects.equals(lactose, that.lactose) && Objects.equals(manitol, that.manitol) && Objects.equals(sorbitol, that.sorbitol) && Objects.equals(gos, that.gos) && Objects.equals(fructan, that.fructan);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(amount, fructose, lactose, manitol, sorbitol, gos, fructan);
     }
 
     public static class StratifiedDtoBuilder {

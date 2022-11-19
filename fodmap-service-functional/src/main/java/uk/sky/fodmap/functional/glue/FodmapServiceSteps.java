@@ -1,29 +1,21 @@
 package uk.sky.fodmap.functional.glue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.google.inject.Inject;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.springframework.http.ResponseEntity;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 import uk.sky.fodmap.dto.FodmapItem;
 import uk.sky.fodmap.functional.client.FodmapServiceClient;
 import uk.sky.fodmap.functional.dto.Response;
 import uk.sky.fodmap.functional.util.FoodGroups;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -33,6 +25,7 @@ public class FodmapServiceSteps {
 
     private final FodmapServiceClient fodmapServiceClient;
     private Response response;
+    private static final ObjectMapper om = new ObjectMapper();
 
     @Inject
     public FodmapServiceSteps(FodmapServiceClient fodmapServiceClient){
@@ -50,34 +43,32 @@ public class FodmapServiceSteps {
     }
 
     @And("the response body contains the following fodmap items")
-    public void theResponseBodyContainsTheFollowingFodmapItems(DataTable dataTable) {
-        System.out.println("The response body contains " + response.getBody());
+    public void theResponseBodyContainsTheFollowingFodmapItems(DataTable dataTable) throws JsonProcessingException {
+        String body = response.getBody();
+        String substring = body.substring(1, body.length() - 1);
+        FodmapItem actualFodmapItem = om.readValue(substring, FodmapItem.class);
+        FodmapItem expectedFodmapItem = convertToFodmapItem(dataTable);
+        assertEquals(actualFodmapItem, expectedFodmapItem);
+    }
 
-        StringBuilder sb = new StringBuilder();
+    @And("the response body contains an empty list")
+    public void theResponseBodyContainsAnEmptyList() {
+        assertEquals("[]", response.getBody());
+    }
 
+    @Given("no fodmap items are persisted in the database for PULSES_TOFU_AND_NUTS")
+    public void noFodmapItemsArePersistedInTheDatabaseForPULSES_TOFU_AND_NUTS() {
+    }
+
+    private FodmapItem  convertToFodmapItem(DataTable dataTable) throws JsonProcessingException {
         String jsonString = dataTable.asMaps(String.class, String.class).stream().
                 findFirst()
-                .map(mapIn -> {
-                    sb.append("\"name\":" + "\"" + mapIn.get("name") + "\"");
-                    sb.append(",");
-                    sb.append("\"food_group\":" + "\"" + mapIn.get("food_group") + "\"");
-                    sb.append(",");
-                    sb.append("\"overall_rating\":" + "\"" + mapIn.get("overall_rating") + "\"");
-                    sb.append(",");
-                    sb.append("\"stratified_rating\":" + mapIn.get("stratified_rating") );
-
-                    return String.format("{%s}", sb.toString());
-                }).get();
-
-
-        ObjectMapper om = new ObjectMapper();
-        try {
-            FodmapItem fodmapItem = om.readValue(jsonString, FodmapItem.class);
-            System.out.println("fodmap item" + fodmapItem.getStratifiedRating().getFructan());
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-
+                .map(mapIn -> mapIn
+                        .entrySet()
+                        .stream()
+                        .collect(Collectors.toMap(entry -> String.format("\"%s\"", entry.getKey()), Map.Entry::getValue))
+                        .toString().strip().replace(" ", "").replace("=", ":")).get();
+        return om.readValue(jsonString, FodmapItem.class);
     }
 }
+

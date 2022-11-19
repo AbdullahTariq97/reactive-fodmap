@@ -31,5 +31,4 @@ public class CassandraStepDefinitions {
         return collection.toString().toLowerCase().substring(1, collection.toString().length() - 1);
     }
 
-
 }

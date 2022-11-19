@@ -10,12 +10,16 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.projectlombok:lombok:1.18.22'
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
 // This dependency bring in the class Cucumber and CucumberOptions
     implementation 'io.cucumber:cucumber-java:6.10.4'
     implementation 'io.cucumber:cucumber-junit:6.10.4'
     implementation 'io.cucumber:cucumber-guice:6.10.4'
+
+    implementation 'eu.rekawek.toxiproxy:toxiproxy-java:2.1.7'
+
 
 
 // Since we are using cucumber JUnit 5, we will need to use the vintage Junit dependency otherwise we will get error no tests found
