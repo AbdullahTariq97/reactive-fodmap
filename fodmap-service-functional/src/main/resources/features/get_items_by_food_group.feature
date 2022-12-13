@@ -1,5 +1,5 @@
 Feature:
-
+#// passing bad input scenarios
   Scenario: The service should return list of fodmap items for a given food group
     Given the database is populated with a record
       | food_group  | name     | overall_rating | stratified_rating                                                                 |
@@ -16,11 +16,11 @@ Feature:
     Then status code of 200 should be returned
     And the response body contains an empty list
 
-#  Scenario: The service should return expected error when database is down
-#    Given the database is down
-
-
-
+  Scenario: The service should return expected error when database is down
+    Given the database is down
+    When a request is made to get fodmap items by food group VEGETABLE
+    Then status code of 500 should be returned
+    And the response body contains the error message downstream failure : database
 
 #  check case sensitivity store with different case for food group into database and check if we are able to retrive
 #  Must insure that the cassandra client is adding data with lowercase

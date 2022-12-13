@@ -8,7 +8,11 @@ public class SpringLocalApplication {
 
     private ConfigurableApplicationContext configurableApplicationContext;
 
-    public SpringLocalApplication(){
+    public SpringLocalApplication() {
         configurableApplicationContext = SpringApplication.run(ReactiveFodmapApplication.class);
+    }
+
+    public void stop() {
+        configurableApplicationContext.stop();
     }
 }

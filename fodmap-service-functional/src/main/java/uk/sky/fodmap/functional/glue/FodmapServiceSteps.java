@@ -23,17 +23,17 @@ import static org.junit.Assert.*;
 public class FodmapServiceSteps {
 
 
+    private static final ObjectMapper om = new ObjectMapper();
     private final FodmapServiceClient fodmapServiceClient;
     private Response response;
-    private static final ObjectMapper om = new ObjectMapper();
 
     @Inject
-    public FodmapServiceSteps(FodmapServiceClient fodmapServiceClient){
+    public FodmapServiceSteps(FodmapServiceClient fodmapServiceClient) {
         this.fodmapServiceClient = fodmapServiceClient;
     }
 
     @When("^a request is made to get fodmap items by food group (.+)$")
-    public void makeRequestToFodmapService(FoodGroups foodGroup){
+    public void makeRequestToFodmapService(FoodGroups foodGroup) {
         response = fodmapServiceClient.getItemsByFoodGroup(foodGroup);
     }
 
@@ -60,7 +60,12 @@ public class FodmapServiceSteps {
     public void noFodmapItemsArePersistedInTheDatabaseForPULSES_TOFU_AND_NUTS() {
     }
 
-    private FodmapItem  convertToFodmapItem(DataTable dataTable) throws JsonProcessingException {
+    @And("^the response body contains the error message (.+)$")
+    public void theResponseBodyContainsTheErrorMessageDownstreamFailureDatabase(String expectedErrorMessage) throws JsonProcessingException {
+        System.out.println("The body contains" + response.getBody());
+    }
+
+    private FodmapItem convertToFodmapItem(DataTable dataTable) throws JsonProcessingException {
         String jsonString = dataTable.asMaps(String.class, String.class).stream().
                 findFirst()
                 .map(mapIn -> mapIn

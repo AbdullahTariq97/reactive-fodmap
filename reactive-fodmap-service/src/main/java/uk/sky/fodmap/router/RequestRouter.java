@@ -18,7 +18,7 @@ public class RequestRouter {
     private FodmapItemHandler fodmapItemHandler;
 
     @Bean
-    public RouterFunction<EntityResponse<Flux<FodmapItem>>> getItemsByGroup(){
+    public RouterFunction<EntityResponse<Flux<FodmapItem>>> getItemsByGroup() {
         return RouterFunctions.route(RequestPredicates.GET("/items"), request -> {
             System.out.println("A request was received by our router");
             return fodmapItemHandler.getItemsByGroup(request);
